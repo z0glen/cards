@@ -19,13 +19,13 @@
 <script>
     export default {
         props: {
-            created_at: String,
-            id: String,
-            nsfw: Boolean,
-            text: Array,
-            isBlackCard: Boolean,
-            canSelect: Boolean,
-            inHand: Boolean,
+            created_at: { type: String, default: "" },
+            id: { type: String, default: "" },
+            nsfw: { type: Boolean, default: true },
+            text: { type: Array, required: true },
+            isBlackCard: { type: Boolean, default: false },
+            canSelect: { type: Boolean, default: false },
+            inHand: { type: Boolean, default: false },
         },
         computed: {
             variant() {

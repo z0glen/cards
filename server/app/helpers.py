@@ -1,5 +1,8 @@
 import requests
 import json
+from datetime import datetime
+from app.models import CallCard, ResponseCard
+from app import db
 
 
 def get_json(url):
@@ -25,3 +28,24 @@ def join_cards():
     for r in responses:
         f.write("%s\n" % '_____'.join(r['text']))
     f.close()
+
+def load_from_file():
+    calls = []
+    if CallCard.query.count() == 0:
+        calls = read_file('calls.json')
+        for c in calls:
+            date = datetime.strptime(c['created_at'], '%Y-%m-%dT%H:%M:%S%z')
+            card = CallCard(text=c['text'], created_at=date, nsfw=True)
+            db.session.add(card)
+    responses = []
+    if ResponseCard.query.count() == 0:
+        responses = read_file('responses.json')
+        for r in responses:
+            date = datetime.strptime(r['created_at'], '%Y-%m-%dT%H:%M:%S%z')
+            card = ResponseCard(text=r['text'], created_at=date, nsfw=True)
+            db.session.add(card)
+    db.session.commit()
+    return {
+        'calls': calls,
+        'responses': responses
+    }

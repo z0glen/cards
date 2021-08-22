@@ -254,7 +254,7 @@
                  this.$socket.emit('joinRoom', {'room': this.code, 'userData': this.userData});
             });
         }
-    }
+    };
 </script>
 
 <style scoped>

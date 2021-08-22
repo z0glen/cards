@@ -4,6 +4,7 @@
             <b-jumbotron bg-variant="secondary" text-variant="white" header="Cards Against Online Player">
                 <b-button v-b-modal.create-modal variant="primary" class="button">Create Game</b-button>
                 <b-button v-b-modal.join-modal variant="success" class="button">Join Game</b-button>
+                <b-button to="decks" variant="info" class="button">Manage Decks</b-button>
             </b-jumbotron>
             <b-jumbotron header="Gameplay Notes">
                 <ul class="gameplay-notes">

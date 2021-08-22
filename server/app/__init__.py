@@ -1,5 +1,8 @@
 from flask import Flask
 from flask_socketio import SocketIO
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import os
 import logging
 import sys
@@ -15,9 +18,15 @@ formatter = logging.Formatter('%(asctime)s - %(filename)s:%(lineno)d - %(levelna
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 
+CORS(app)
 socketIO = SocketIO(app, cors_allowed_origins="*")
 
 app.secret_key = os.environ.get('SECRET_KEY', 'dev')
 app.password = os.environ.get('CARDS_PASSWORD', 'dev')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-from app import routes
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+from app import routes, models

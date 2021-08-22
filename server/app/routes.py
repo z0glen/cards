@@ -1,11 +1,14 @@
 from flask import jsonify, request
 from flask_socketio import join_room, emit
+from flask_cors import cross_origin
 import sys
 
 from app import app, socketIO
 from app.helpers import read_file
+from app.helpers import load_from_file
 from app.game import Game
 from app.player import Player
+from app.models import CallCard, ResponseCard
 
 # dict for tracking active games
 # game code to game object
@@ -23,12 +26,22 @@ def is_new_sid(sid):
         return False
     return True
 
-@app.route('/cards')
+@app.route('/importcards')
+@cross_origin()
+def import_cards():
+    app.logger.info("Importing cards from file!")
+    return jsonify(load_from_file())
+
+@app.route('/decks')
+@cross_origin()
 def get_cards():
-    calls = read_file('calls.json')
-    responses = read_file('responses.json')
-    response_object = {'calls': calls, 'responses': responses}
-    return jsonify(response_object)
+    decks = {
+        'Core': {
+            'calls': CallCard.query.all(),
+            'responses': ResponseCard.query.all()
+        }
+    }
+    return jsonify(decks)
 
 @socketIO.on('create')
 def on_create(data):

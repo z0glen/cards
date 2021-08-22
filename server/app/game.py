@@ -3,7 +3,7 @@ import string
 import json
 
 from app import app
-from app.helpers import read_file
+from app.models import CallCard, ResponseCard
 
 class Game:
     def __init__(self):
@@ -27,9 +27,9 @@ class Game:
 
     def load_cards(self):
         # TODO: use struct with more efficient front of list pops
-        self.deck['calls'] = read_file('calls.json')
+        self.deck['calls'] = [card.to_dict() for card in CallCard.query.all()]
         random.shuffle(self.deck['calls'])
-        self.deck['responses'] = read_file('responses.json')
+        self.deck['responses'] = [card.to_dict() for card in ResponseCard.query.all()]
         random.shuffle(self.deck['responses'])
 
     def to_json(self):
